@@ -1,0 +1,22 @@
+<div class="login">
+  <form class="content" [formGroup]="loginForm" (ngSubmit)="login()">
+    <h3>Login</h3>
+    <div class="alert-error" *ngIf="messageError">{{ messageError }}</div>
+    <div class="container">
+      <label for="username"><b>Username</b><span class="required">*</span></label>
+      <input type="text" placeholder="Enter Username" formControlName="username">
+      <div *ngIf="loginForm.get('username').errors?.required && 
+          (loginForm.get('username').dirty || loginForm.get('username').touched)" class="alert-error">
+        Username is required
+      </div>
+
+      <label for="password"><b>Password</b><span class="required">*</span></label>
+      <input type="password" placeholder="Enter Password" formControlName="password">
+      <div *ngIf="loginForm.get('password').errors?.required && 
+        (loginForm.get('password').dirty || loginForm.get('password').touched)" class="alert-error">
+      Password is required
+    </div>
+      <button type="submit" [disabled]="loginForm.invalid || loading">Login</button>
+    </div>
+  </form>
+</div>
