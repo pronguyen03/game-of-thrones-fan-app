@@ -2,23 +2,29 @@
   background: #FEFEFE none;
   width: 70%;
   margin: auto;
-  margin-top: 7%;
 }
 
 .list-card {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-}
-.card {
-  width: 500px;
-  min-height: 250px;
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-  transition: 0.3s;
-  margin: 10px;
-  text-align: center;
-}
+  .card {
+    width: 500px;
+    min-height: 250px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    margin: 10px;
+    text-align: center;
+    align-self: center;
+    img {
+      width: 100%;
+      height: auto;
+      max-height: 265px;
+    }
+  }
 
-.card:hover {
-  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+  .card:hover {
+    cursor: pointer;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+  }
 }

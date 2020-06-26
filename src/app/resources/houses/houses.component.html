@@ -1,0 +1,36 @@
+<div class="resource">
+  <h2>Houses</h2>
+  <div class="filter">
+    <form [formGroup]="filterForm">
+      <div class="filter-item">
+        <label for="name"><b>Name</b></label>
+        <input type="text" placeholder="Enter Name" formControlName="name">
+      </div>
+      <div class="filter-item">
+        <label for="region"><b>Region</b></label>
+        <input type="text" formControlName="region">
+      </div>
+      <div class="filter-item">
+        <label for="words"><b>Words</b></label>
+        <input type="text" formControlName="words">
+      </div>
+    </form>
+    <div class="filter-item">
+      <button class="btn btn-default" type="button" (click)="filterForm.reset()">Reset</button>
+    </div>
+  </div>
+  <table>
+    <tr>
+      <th *ngFor="let header of headers">{{ header }}</th>
+    </tr>
+    <tr *ngFor="let house of filteredHouses$ | async">
+      <td><a [routerLink]="house.id">{{ house.id }}</a></td>
+      <td>{{ house.name }}</td>
+      <td>{{ house.region }}</td>
+      <td>{{ house.words }}</td>
+    </tr>
+  </table>
+
+  <button class="btn btn-default" type="button" (click)="back()">Back</button>
+
+</div>

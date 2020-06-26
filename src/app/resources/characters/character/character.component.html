@@ -1,0 +1,18 @@
+<div class="resource">
+  <h2>Character {{ id }}</h2>
+
+  <p><label><b>Name: </b></label> {{ character.name }}</p>
+  <p><label><b>Gender: </b></label>{{ character.gender }}</p>
+  <p><label><b>Culture: </b></label>{{ character.culture }}</p>
+  <p><label><b>Born: </b></label>{{ character.born }}</p>
+  <p><label><b>Died: </b></label>{{ character.died }}</p>
+  <p><label><b>Titles: </b></label>{{ character.titles }}</p>
+  <p><label><b>Aliases: </b></label>{{ character.aliases }}</p>
+  <p><label><b>Father: </b></label>{{ character.father }}</p>
+  <p><label><b>Mother: </b></label>{{ character.mother }}</p>
+  <p><label><b>Spouse: </b></label>{{ character.spouse }}</p>
+  <p><label><b>TV Series: </b></label>{{ character.tvSeries?.toString() }}</p>
+  <p><label><b>Played By: </b></label>{{ character.playedBy?.toString() }}</p>
+
+  <button class="btn btn-default" type="button" (click)="back()">Back</button>
+</div>>

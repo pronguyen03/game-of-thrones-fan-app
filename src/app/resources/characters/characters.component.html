@@ -1,0 +1,50 @@
+<div class="resource">
+  <h2>Characters</h2>
+  <form [formGroup]="filterForm">
+    <div class="filter">
+        <div class="filter-item">
+          <label for="name"><b>Name</b></label>
+          <input type="text" placeholder="Enter Name" formControlName="name">
+        </div>
+        <div class="filter-item">
+          <label for="gender"><b>Gender</b></label>
+          <select formControlName="gender">
+            <option value="All" selected>All</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
+        </div>
+        <div class="filter-item">
+          <label for="culture"><b>Culture</b></label>
+          <input type="text" placeholder="Enter Culture" formControlName="culture">
+        </div>
+        <div class="filter-item">
+          <label for="born"><b>Born</b></label>
+          <input type="text" placeholder="Enter Year" formControlName="born">
+        </div>
+        <div class="filter-item">
+          <label for="died"><b>Died</b></label>
+          <input type="text" placeholder="Enter Year" formControlName="died">
+        </div>
+      <div class="filter-item">
+        <button class="btn btn-default" type="button" (click)="filterForm.reset()">Reset</button>
+      </div>
+    </div>
+  </form>
+  <table>
+    <tr>
+      <th *ngFor="let header of headers">{{ header }}</th>
+    </tr>
+    <tr *ngFor="let character of filteredCharacters$ | async, let i=index">
+      <td><a [routerLink]="character.id">{{ character.id }}</a></td>
+      <td>{{ character.name }}</td>
+      <td>{{ character.gender }}</td>
+      <td>{{ character.culture }}</td>
+      <td>{{ character.born | date }}</td>
+      <td>{{ character.died | date }}</td>
+    </tr>
+  </table>
+
+  <button class="btn btn-default" type="button" (click)="back()">Back</button>
+
+</div>>
