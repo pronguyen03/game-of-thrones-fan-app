@@ -1,24 +1,39 @@
 <div class="resource">
   <h2>Books</h2>
-  <div class="filter">
-    <form [formGroup]="filterForm">
+  <app-search-bar
+    [searchCriteria] = "searchCriteria"
+    (searchOutput) = "search($event)"
+    (getAll) = "showAll()">
+  </app-search-bar>
+  <form [formGroup]="filterForm">
+    <div class="filter">
+        <div class="filter-item">
+          <label for="name"><b>Name</b></label>
+          <input type="text" placeholder="Enter Name" formControlName="name">
+        </div>
+        <div class="filter-item">
+          <label for="fromDate"><b>From Date</b></label>
+          <input type="date" formControlName="fromDate">
+        </div>
+        <div class="filter-item">
+          <label for="toDate"><b>To Date</b></label>
+          <input type="date" formControlName="toDate">
+        </div>
       <div class="filter-item">
-        <label for="name"><b>Name</b></label>
-        <input type="text" placeholder="Enter Name" formControlName="name">
+        <button class="btn btn-default" type="button" (click)="filterForm.reset()">Reset Filter</button>
       </div>
-      <div class="filter-item">
-        <label for="fromDate"><b>From Date</b></label>
-        <input type="date" formControlName="fromDate">
-      </div>
-      <div class="filter-item">
-        <label for="toDate"><b>To Date</b></label>
-        <input type="date" formControlName="toDate">
-      </div>
-    </form>
-    <div class="filter-item">
-      <button class="btn btn-default" type="button" (click)="filterForm.reset()">Reset</button>
     </div>
-  </div>
+  </form>
+  <br>
+
+  <button [style.visibility]="pagination.currentPage > 1 ? 'visible' : 'hidden'" 
+    class="btn btn-default" 
+    type="button" 
+    (click)="previous()">Previous</button>
+  <button [style.visibility]="(filteredBook$ | async)?.length === pagination.pageSize ? 'visible' : 'hidden'" 
+    class="btn btn-default" 
+    type="button" 
+    (click)="next()">Next</button>
   <table>
     <tr>
       <th *ngFor="let header of headers">{{ header }}</th>
@@ -30,7 +45,7 @@
       <td>{{ book.released | date }}</td>
     </tr>
   </table>
+  <div *ngIf="(filteredBook$ | async)?.length === 0" class="no-data">No Data Available</div>
 
-  <button class="btn btn-default" type="button" (click)="back()">Back</button>
-
+  <app-footer-buttons></app-footer-buttons>
 </div>

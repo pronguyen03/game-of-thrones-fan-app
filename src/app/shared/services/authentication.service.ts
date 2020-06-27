@@ -31,4 +31,9 @@ export class AuthenticationService {
       return throwError(new Error('Login failed'));
     }
   }
+
+  logOut(): void {
+    localStorage.removeItem('currentUser');
+    this.currentUserSubject.next(null);
+  }
 }

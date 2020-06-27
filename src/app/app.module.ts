@@ -14,6 +14,7 @@ import { CharactersComponent } from './resources/characters/characters.component
 import { HousesComponent } from './resources/houses/houses.component';
 import { HouseComponent } from './resources/houses/house/house.component';
 import { CharacterComponent } from './resources/characters/character/character.component';
+import { SharedModule } from './shared/shared.module';
 @NgModule({
   declarations: [
     AppComponent,
@@ -30,7 +31,8 @@ import { CharacterComponent } from './resources/characters/character/character.c
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    SharedModule
   ],
   providers: [AuthenticationService],
   bootstrap: [AppComponent]

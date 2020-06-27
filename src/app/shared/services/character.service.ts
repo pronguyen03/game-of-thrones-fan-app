@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Character } from '../models/character';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { BaseService } from './base.service';
-import { map } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -14,18 +14,35 @@ export class CharacterService extends BaseService {
     super(http);
   }
 
-  getCharacters(): Observable<Character[]> {
-    return this.getData('/characters').pipe(
-      map((characters: Character[]) =>
-        characters.map(character => {
-          character.id = character.url.split('/').pop();
-          return character;
-        }
-    ))
+  getCharacters(page: number): Observable<Character[]> {
+    return of(`/characters?page=${page}`)
+      .pipe(
+        switchMap(url => this.getData(url))
+      ).pipe(
+        map((characters: Character[]) =>
+          characters.map(character => {
+            character.id = character.url.split('/').pop();
+            return character;
+          }
+      ))
     );
   }
 
   getCharacterById(id: string): Observable<Character> {
     return this.getData(`/characters/${id}`);
+  }
+
+  getCharactersByQuery(page: number, query: { key: string, value: string}): Observable<Character[]> {
+    return of(`/characters?page=${page}&${query.key}=${query.value}`)
+      .pipe(
+        switchMap(url => this.getData(url))
+      ).pipe(
+        map((characters: Character[]) =>
+          characters.map(character => {
+            character.id = character.url.split('/').pop();
+            return character;
+          }
+        ))
+      );
   }
 }

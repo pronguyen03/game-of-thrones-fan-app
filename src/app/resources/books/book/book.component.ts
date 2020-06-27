@@ -31,7 +31,7 @@ export class BookComponent implements OnInit {
     this.bookService.getBookByVolume(volume)
       .subscribe(
         book => this.book = book,
-        error => console.error(error));
+        error => alert(error));
   }
 
   back(): void {

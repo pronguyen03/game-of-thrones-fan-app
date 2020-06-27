@@ -1,1 +1,19 @@
-<p>house works!</p>
+<div class="resource">
+  <h2>House {{ id }}</h2>
+
+  <p><label><b>Name: </b></label> {{ house.name }}</p>
+  <p><label><b>Region: </b></label>{{ house.region }}</p>
+  <p><label><b>Coat Of Arms: </b></label>{{ house.coatOfArms }}</p>
+  <p><label><b>Words: </b></label>{{ house.words }}</p>
+  <p><label><b>Titles: </b></label>{{ house.titles }}</p>
+  <p><label><b>Seats: </b></label>{{ house.seats }}</p>
+  <p><label><b>Current Lord: </b></label>{{ house.currentLord }}</p>
+  <p><label><b>Heir: </b></label>{{ house.heir }}</p>
+  <p><label><b>Overlord: </b></label>{{ house.overlord }}</p>
+  <p><label><b>Founded: </b></label>{{ house.founded }}</p>
+  <p><label><b>Founder: </b></label>{{ house.founder }}</p>
+  <p><label><b>Died Out: </b></label>{{ house.diedOut }}</p>
+  <p><label><b>Ancestral Weapons: </b></label>{{ house.ancestralWeapons?.toString() }}</p>
+
+  <button class="btn btn-default" type="button" (click)="back()">Back</button>
+</div>>

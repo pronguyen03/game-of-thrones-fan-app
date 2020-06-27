@@ -1,24 +1,40 @@
 <div class="resource">
   <h2>Houses</h2>
-  <div class="filter">
-    <form [formGroup]="filterForm">
+
+  <app-search-bar
+    [searchCriteria] = "searchCriteria"
+    (searchOutput) = "search($event)"
+    (getAll) = "showAll()">
+  </app-search-bar>
+
+  <form [formGroup]="filterForm">
+    <div class="filter">
       <div class="filter-item">
         <label for="name"><b>Name</b></label>
         <input type="text" placeholder="Enter Name" formControlName="name">
       </div>
       <div class="filter-item">
         <label for="region"><b>Region</b></label>
-        <input type="text" formControlName="region">
+        <input type="text" placeholder="Enter Region" formControlName="region">
       </div>
       <div class="filter-item">
         <label for="words"><b>Words</b></label>
-        <input type="text" formControlName="words">
+        <input type="text" placeholder="Enter Words" formControlName="words">
       </div>
-    </form>
-    <div class="filter-item">
-      <button class="btn btn-default" type="button" (click)="filterForm.reset()">Reset</button>
+      <div class="filter-item">
+        <button class="btn btn-default" type="button" (click)="filterForm.reset()">Reset Filter</button>
+      </div>
     </div>
-  </div>
+  </form>
+
+  <button [style.visibility]="pagination.currentPage > 1 ? 'visible' : 'hidden'" 
+    class="btn btn-default" 
+    type="button" 
+    (click)="previous()">Previous</button>
+  <button [style.visibility]="(filteredHouses$ | async)?.length === pagination.pageSize ? 'visible' : 'hidden'" 
+    class="btn btn-default" 
+    type="button" 
+    (click)="next()">Next</button>
   <table>
     <tr>
       <th *ngFor="let header of headers">{{ header }}</th>
@@ -30,7 +46,7 @@
       <td>{{ house.words }}</td>
     </tr>
   </table>
+  <div *ngIf="(filteredHouses$ | async)?.length === 0" class="no-data">No Data Available</div>
 
-  <button class="btn btn-default" type="button" (click)="back()">Back</button>
-
+  <app-footer-buttons></app-footer-buttons>
 </div>

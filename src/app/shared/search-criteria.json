@@ -1,0 +1,44 @@
+{
+  "BOOKS": [
+    {
+      "display": "Name",
+      "value": "name"
+    }
+  ],
+  "HOUSES": [
+    {
+      "display": "Name",
+      "value": "name"
+    },
+    {
+      "display": "Region",
+      "value": "region"
+    },
+    {
+      "display": "Words",
+      "value": "words"
+    }
+  ],
+  "CHARACTERS": [
+    {
+      "display": "Name",
+      "value": "name"
+    },
+    {
+      "display": "Gender",
+      "value": "gender"
+    },
+    {
+      "display": "Culture",
+      "value": "culture"
+    },
+    {
+      "display": "Born Year",
+      "value": "born"
+    },
+    {
+      "display": "Died Year",
+      "value": "died"
+    }
+  ]
+}

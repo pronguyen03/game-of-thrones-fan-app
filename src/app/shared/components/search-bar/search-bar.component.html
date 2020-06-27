@@ -1,0 +1,9 @@
+<form [formGroup]="searchForm">
+  <div class="search">
+    <input type="text" placeholder="Enter to search" formControlName="value">
+    <select formControlName="key">
+      <option *ngFor="let item of searchCriteria" [value]="item.value">{{ item.display }}</option>
+    </select>
+    <button class="btn btn-info" type="button" (click)="showAll()">Show All</button>
+  </div>
+</form>

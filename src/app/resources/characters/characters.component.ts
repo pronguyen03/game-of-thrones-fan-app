@@ -5,6 +5,9 @@ import { Location } from '@angular/common';
 import { CharacterService } from 'src/app/shared/services/character.service';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { map } from 'rxjs/operators';
+import SEARCH_CRITERIA from '../../shared/search-criteria.json';
+import { Router, ActivatedRoute } from '@angular/router';
+import { Pagination } from 'src/app/shared/pagination';
 
 @Component({
   selector: 'app-characters',
@@ -12,21 +15,31 @@ import { map } from 'rxjs/operators';
   styleUrls: ['./characters.component.scss']
 })
 export class CharactersComponent implements OnInit, OnDestroy {
+  routerSubscription: Subscription;
   headers: string[] = ['No.', 'Name', 'Gender', 'Culture', 'Born', 'Died'];
   characters$: Observable<Character[]>;
   filteredCharacters$: Observable<Character[]>;
   filterForm: FormGroup;
   filterSubscription: Subscription;
 
+  searchCriteria: { display: string, value: string}[] = SEARCH_CRITERIA.CHARACTERS;
+  searchQuery: { key: string, value: string };
+  pagination = new Pagination();
+
   constructor(
     private characterService: CharacterService,
-    private location: Location,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private router: Router,
+    private route: ActivatedRoute
     ) { }
 
   ngOnInit(): void {
     this.initForm();
-    this.getListCharacters();
+
+    this.routerSubscription = this.route.queryParams.subscribe(params => {
+      this.pagination.currentPage = +params.page || 1;
+      this.getListCharacters(this.pagination.currentPage);
+    });
   }
 
   initForm(): void {
@@ -41,14 +54,10 @@ export class CharactersComponent implements OnInit, OnDestroy {
     this.filterSubscription = this.filterForm.valueChanges.subscribe(() => this.filterData());
   }
 
-  getListCharacters(): void {
-    this.characters$ = this.characterService.getCharacters();
+  getListCharacters(page: number): void {
+    this.characters$ = this.characterService.getCharacters(page);
 
     this.filteredCharacters$ = this.characters$;
-  }
-
-  back(): void {
-    this.location.back();
   }
 
   filterData() {
@@ -76,7 +85,47 @@ export class CharactersComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     // Called once, before the instance is destroyed.
     // Add 'implements OnDestroy' to the class.
+    this.routerSubscription.unsubscribe();
     this.filterSubscription.unsubscribe();
+  }
+
+  search(searchQuery: { key: string, value: string}): void {
+    this.searchQuery = searchQuery;
+
+    this.pagination.currentPage = 1;
+    this.characters$ = this.characterService.getCharactersByQuery(this.pagination.currentPage, searchQuery);
+
+    this.filteredCharacters$ = this.characters$;
+  }
+
+  next(): void {
+    if (this.searchQuery &&
+      this.searchQuery.key && this.searchQuery.key.trim() !== '' &&
+      this.searchQuery.value && this.searchQuery.value.trim() !== '') {
+      this.characters$ = this.characterService.getCharactersByQuery(++this.pagination.currentPage, this.searchQuery);
+
+      this.filteredCharacters$ = this.characters$;
+    } else {
+      this.router.navigate(['/characters'], { queryParams: { page: ++this.pagination.currentPage }});
+    }
+  }
+
+  previous(): void {
+    if (this.searchQuery &&
+      this.searchQuery.key && this.searchQuery.value.trim() !== '' &&
+      this.searchQuery.value && this.searchQuery.value.trim() !== '') {
+      this.characters$ = this.characterService.getCharactersByQuery(--this.pagination.currentPage, this.searchQuery);
+
+      this.filteredCharacters$ = this.characters$;
+    } else {
+      this.router.navigate(['/characters'], { queryParams: { page: --this.pagination.currentPage }});
+    }
+  }
+
+  showAll(): void {
+    this.searchQuery.key = '';
+    this.searchQuery.value = '';
+    this.getListCharacters(this.pagination.currentPage);
   }
 
 }

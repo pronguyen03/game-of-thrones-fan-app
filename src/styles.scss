@@ -46,6 +46,11 @@ h3, h2 {
   color: #000000;
 }
 
+.btn-info {
+  background-color: #004085;
+  color: #cce5ff;
+}
+
 
 input[type=text], input[type=password], input[type=date], select {
   padding: 10px 20px;
@@ -70,4 +75,39 @@ label {
       min-width: 25px;
     }
   }
+}
+
+.search {
+  width: 60%;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  input[type=text] {
+    width: 60%;
+    min-width: 300px;
+  }
+  select {
+    width: 20%;
+    min-width: 100px;
+  }
+  button {
+    width: 20%;
+    min-width: 80px;
+  }
+}
+
+.no-data {
+  width: 80%;
+  margin: auto;
+  text-align: center;
+  border: 1px solid #ddd;
+  font-weight: 600;
+  padding: 20px 0px;
+  font-size: 16px;
+}
+
+.logo {
+  width: 350px;
+  height: auto;
 }
