@@ -3,7 +3,7 @@ import { BaseService } from './base.service';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { Book } from '../models/book';
-import { catchError, map, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { catchError, map, debounceTime, distinctUntilChanged, switchMap, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -46,7 +46,8 @@ export class BookService extends BaseService {
             book.volume = +book.url.split('/').pop();
             return book;
           }
-        ))
+        )),
+        catchError(value => tap(value))
       );
   }
 }
