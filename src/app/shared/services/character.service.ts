@@ -29,7 +29,12 @@ export class CharacterService extends BaseService {
   }
 
   getCharacterById(id: string): Observable<Character> {
-    return this.getData(`/characters/${id}`);
+    return this.getData(`/characters/${id}`).pipe(
+      map((character: Character) => {
+        character.id = character.url.split('/').pop();
+        return character;
+      })
+    );
   }
 
   getCharactersByQuery(page: number, query: { key: string, value: string}): Observable<Character[]> {

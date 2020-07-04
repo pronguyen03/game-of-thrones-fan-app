@@ -32,7 +32,7 @@ export class SearchBarComponent implements OnInit, OnDestroy {
   }
 
   search(searchQuery: { key: string, value: string}): void {
-    if (!searchQuery.key || searchQuery.value.trim() === '' || !searchQuery.value || searchQuery.value.trim() === '') {
+    if (!searchQuery.key || !searchQuery.value || searchQuery.value.trim() === '' || searchQuery.value.trim() === '') {
       return;
     }
 

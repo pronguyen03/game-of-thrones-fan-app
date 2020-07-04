@@ -1,7 +1,7 @@
 <div class="resource">
   <h2>Volume {{ volume }}</h2>
 
-  <p><label><b>Name: </b></label> {{ book.name }}</p>
+  <p><label><b>Name: {{ book.name }}</b></label></p>
   <p><label><b>IS Book No.: </b></label>{{ book.isbn }}</p>
   <p><label><b>Authors: </b></label>{{ book.authors?.toString() }}</p>
   <p><label><b>Number Of Pages: </b></label>{{ book.numberOfPages }}</p>
@@ -9,6 +9,18 @@
   <p><label><b>Country: </b></label>{{ book.country }}</p>
   <p><label><b>Media Type: </b></label>{{ book.mediaType }}</p>
   <p><label><b>Released Date: </b></label>{{ book.released | date }}</p>
-
-  <button class="btn btn-default" type="button" (click)="back()">Back</button>
+  <p><label><b>List Character: </b></label></p>
+  <table>
+    <tr>
+      <th>No.</th>
+      <th>Name</th>
+      <th></th>
+    </tr>
+    <tr *ngFor="let character of book.listCharacters, let i = index">
+      <td>{{ i + 1 }}</td>
+      <td>{{ character.name }}</td>
+      <td><a [routerLink]="['../../characters', character.id]">Detail</a></td>
+    </tr>
+  </table>
+  <app-footer-buttons></app-footer-buttons>
 </div>>

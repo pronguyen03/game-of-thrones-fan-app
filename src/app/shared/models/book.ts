@@ -1,3 +1,5 @@
+import { Character } from './character';
+
 export class Book {
   url: string;
   volume: number;
@@ -9,4 +11,6 @@ export class Book {
   country: string;
   mediaType: string;
   released: string;
+  characters: string[];
+  listCharacters: Character[] = [];
 }

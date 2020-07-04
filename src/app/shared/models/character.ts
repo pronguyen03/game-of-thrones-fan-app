@@ -1,3 +1,6 @@
+import { House } from './house';
+import { Book } from './book';
+
 export class Character {
   id: string;
   url: string;
@@ -9,8 +12,15 @@ export class Character {
   titles: string[];
   aliases: string[];
   father: string;
+  fatherDetail: Character;
   mother: string;
+  motherDetail: Character;
   spouse: string;
-  tvSeries: string[];
-  playedBy: string[];
+  spouseDetail: Character;
+  allegiances: string[] = [];
+  listAllegiances: House[] = [];
+  books: string[] = [];
+  listBooks: Book[] = [];
+  tvSeries: string[] = [];
+  playedBy: string[] = [];
 }

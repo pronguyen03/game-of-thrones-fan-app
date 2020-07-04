@@ -1,18 +1,42 @@
 <div class="resource">
   <h2>Character {{ id }}</h2>
 
-  <p><label><b>Name: </b></label> {{ character.name }}</p>
+  <p><label><b>Name: {{ character.name }}</b></label></p>
   <p><label><b>Gender: </b></label>{{ character.gender }}</p>
   <p><label><b>Culture: </b></label>{{ character.culture }}</p>
   <p><label><b>Born: </b></label>{{ character.born }}</p>
   <p><label><b>Died: </b></label>{{ character.died }}</p>
   <p><label><b>Titles: </b></label>{{ character.titles }}</p>
   <p><label><b>Aliases: </b></label>{{ character.aliases }}</p>
-  <p><label><b>Father: </b></label>{{ character.father }}</p>
-  <p><label><b>Mother: </b></label>{{ character.mother }}</p>
-  <p><label><b>Spouse: </b></label>{{ character.spouse }}</p>
+  <p><label><b>Father: </b></label><a *ngIf="character.fatherDetail" [routerLink]="['../', character.fatherDetail?.id]">{{ character.fatherDetail.name }}</a></p>
+  <p><label><b>Mother: </b></label><a *ngIf="character.motherDetail" [routerLink]="['../', character.motherDetail.id]">{{ character.motherDetail.name }}</a></p>
+  <p><label><b>Spouse: </b></label><a *ngIf="character.spouseDetail" [routerLink]="['../', character.spouseDetail.id]">{{ character.spouseDetail.name }}</a></p>
+  <p><label><b>Allegiances: </b></label></p>
+  <table>
+    <tr>
+      <th>No.</th>
+      <th>House</th>
+    </tr>
+    <tr *ngFor="let house of character.listAllegiances, let i = index">
+      <td>{{ i + 1 }}</td>
+      <td><a [routerLink]="['../../houses', house.id]">{{ house.name }}</a></td>
+    </tr>
+  </table>
+
+  <p><label><b>Books: </b></label></p>
+  <table>
+    <tr>
+      <th>No.</th>
+      <th>Name</th>
+    </tr>
+    <tr *ngFor="let books of character.listBooks, let i = index">
+      <td>{{ i + 1 }}</td>
+      <td><a [routerLink]="['../../books', books.volume]">{{ books.name }}</a></td>
+    </tr>
+  </table>
+  
   <p><label><b>TV Series: </b></label>{{ character.tvSeries?.toString() }}</p>
   <p><label><b>Played By: </b></label>{{ character.playedBy?.toString() }}</p>
 
-  <button class="btn btn-default" type="button" (click)="back()">Back</button>
+  <app-footer-buttons></app-footer-buttons>
 </div>>

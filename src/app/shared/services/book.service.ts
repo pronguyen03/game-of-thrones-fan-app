@@ -45,8 +45,8 @@ export class BookService extends BaseService {
           books.map(book => {
             book.volume = +book.url.split('/').pop();
             return book;
-          }
-        )),
+          })
+        ),
         catchError(value => tap(value))
       );
   }

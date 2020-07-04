@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Location } from '@angular/common';
-import { Subscription, Observable } from 'rxjs';
+import { Subscription, Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { House } from 'src/app/shared/models/house';
-import { map } from 'rxjs/operators';
+import { map, startWith, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { HouseService } from 'src/app/shared/services/house.service';
 import SEARCH_CRITERIA from '../../shared/search-criteria.json';
 import { Pagination } from 'src/app/shared/pagination';
@@ -17,13 +17,15 @@ import { Router, ActivatedRoute } from '@angular/router';
 export class HousesComponent implements OnInit, OnDestroy {
   routerSubscription: Subscription;
   headers: string[] = ['No.', 'Name', 'Region', 'Words'];
+  housesSubject: BehaviorSubject<House[]>;
   houses$: Observable<House[]>;
+
   filteredHouses$: Observable<House[]>;
   filterForm: FormGroup;
-  filterSubscription: Subscription;
+  filter$: Observable<{ name: string, region: string, words: string }>;
 
   searchCriteria: { display: string, value: string}[] = SEARCH_CRITERIA.HOUSES;
-  searchQuery: { key: string, value: string };
+  searchQuery: { key: string, value: string } = { key: '', value: ''};
   pagination = new Pagination();
 
   constructor(
@@ -35,6 +37,8 @@ export class HousesComponent implements OnInit, OnDestroy {
     ) { }
 
   ngOnInit(): void {
+    this.housesSubject = new BehaviorSubject<House[]>([]);
+    this.houses$ = this.housesSubject.asObservable();
     this.initForm();
 
     this.routerSubscription = this.route.queryParams.subscribe(params => {
@@ -50,50 +54,51 @@ export class HousesComponent implements OnInit, OnDestroy {
       words: [''],
     });
 
-    this.filterSubscription = this.filterForm.valueChanges.subscribe(() => this.filterData());
+    this.filter$ = this.filterForm.valueChanges.pipe(startWith({
+      name: '',
+      region: '',
+      words: ''
+    })).pipe(
+      debounceTime(250),
+      distinctUntilChanged(),
+    );
+
+    this.filteredHouses$ = combineLatest([this.houses$, this.filter$])
+    .pipe(
+      map(([houses, filterValues]) => {
+        const { name, region, words } = filterValues;
+        return houses.filter(character => {
+          return (name === null || name.trim() === '' || character.name.toLowerCase().indexOf((name || '').toLowerCase()) >= 0) &&
+          (region === null || region.trim() === '' || character.region.toLowerCase().indexOf((region || '').toLowerCase()) >= 0) &&
+          (words === null || words.trim() === '' || character.words.toLowerCase().indexOf((words || '').toLowerCase()) >= 0);
+        });
+      })
+    );
   }
 
   getListHouses(page: number): void {
-    this.houses$ = this.houseService.getHouses(page);
-
-    this.filteredHouses$ = this.houses$;
+    this.houseService.getHouses(page).subscribe(houses => {
+      this.housesSubject.next(houses);
+    });
   }
 
   back(): void {
     this.location.back();
   }
 
-  filterData() {
-    const {
-      name,
-      region,
-      words,
-    }: { name: string, region: string, words: string } = this.filterForm.value;
-
-    this.filteredHouses$ = this.houses$.pipe(
-      map((characters: House[]) =>
-      characters.filter(character => {
-          return (name === null || name.trim() === '' || character.name.toLowerCase().indexOf((name || '').toLowerCase()) >= 0) &&
-          (region === null || region.trim() === '' || character.region.toLowerCase().indexOf((region || '').toLowerCase()) >= 0) &&
-          (words === null || words.trim() === '' || character.words.toLowerCase().indexOf((words || '').toLowerCase()) >= 0);
-        })
-      )
-    );
-  }
-
   search(searchQuery: { key: string, value: string}): void {
     this.searchQuery = searchQuery;
 
     this.pagination.currentPage = 1;
-    this.houses$ = this.houseService.getHousesByQuery(this.pagination.currentPage, searchQuery);
+    this.houseService.getHousesByQuery(this.pagination.currentPage, searchQuery).subscribe(houses => {
+      this.housesSubject.next(houses);
+    });
 
-    this.filteredHouses$ = this.houses$;
   }
 
   ngOnDestroy(): void {
     // Called once, before the instance is destroyed.
     // Add 'implements OnDestroy' to the class.
-    this.filterSubscription.unsubscribe();
     this.routerSubscription.unsubscribe();
   }
 
@@ -101,9 +106,9 @@ export class HousesComponent implements OnInit, OnDestroy {
     if (this.searchQuery &&
       this.searchQuery.key && this.searchQuery.key.trim() !== '' &&
       this.searchQuery.value && this.searchQuery.value.trim() !== '') {
-      this.houses$ = this.houseService.getHousesByQuery(++this.pagination.currentPage, this.searchQuery);
-
-      this.filteredHouses$ = this.houses$;
+      this.houseService.getHousesByQuery(++this.pagination.currentPage, this.searchQuery).subscribe(houses => {
+        this.housesSubject.next(houses);
+      });
     } else {
       this.router.navigate(['/houses'], { queryParams: { page: ++this.pagination.currentPage }});
     }
@@ -113,9 +118,9 @@ export class HousesComponent implements OnInit, OnDestroy {
     if (this.searchQuery &&
       this.searchQuery.key && this.searchQuery.key.trim() !== '' &&
       this.searchQuery.value && this.searchQuery.value.trim() !== '') {
-      this.houses$ = this.houseService.getHousesByQuery(--this.pagination.currentPage, this.searchQuery);
-
-      this.filteredHouses$ = this.houses$;
+      this.houseService.getHousesByQuery(--this.pagination.currentPage, this.searchQuery).subscribe(houses => {
+        this.housesSubject.next(houses);
+      });
     } else {
       this.router.navigate(['/houses'], { queryParams: { page: --this.pagination.currentPage }});
     }
